@@ -11,7 +11,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
+        $courses = Course::all();
+        return view('courses.index', compact('courses'));
     }
 
     /**
@@ -19,7 +20,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+        return view('courses.create');
     }
 
     /**
@@ -27,7 +28,16 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+        Recipe::create([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+        return redirect()->route('courses.index');
+    }
     }
 
     /**
@@ -35,7 +45,8 @@ class CourseController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $course = Course::findOrFail($id);
+        return view('course.show', compact('course'));
     }
 
     /**
@@ -43,7 +54,8 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $course = Course::findOrFail($id);
+        return view('course.edit', compact('course'));
     }
 
     /**
@@ -51,7 +63,18 @@ class CourseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            
+        ]);
+        $recipe = Recipe::findOrFail($id);
+        $recipe->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            
+        ]);
+        return redirect()->route('recipes.index');
     }
 
     /**
@@ -59,6 +82,8 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $recipe = Recipe::findOrFail($id);
+        $recipe->delete();
+        return redirect()->route('recipes.index');
     }
 }
